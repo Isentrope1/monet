@@ -195,16 +195,19 @@ public class MonetOptions {
 			loadFileTokenDefinitions(new InputStreamReader(new FileInputStream(tdef),StandardCharsets.UTF_8));
 		}
 		else{
-			loadHardCodedTokens();			
+			log.info("loading hard coded tokens");
+			loadDefaultTokens();	
+			writeFileTokenDefinitions(new OutputStreamWriter(new FileOutputStream(getTokenDefFile()),StandardCharsets.UTF_8));
+			log.info("loading hard coded tokens");
 		}
-		//special Monet token is always present
+		//special Monet token MUST be listed by terms of LICENSE:
 		addToken(new ERC20(Monet.MONET_TOKEN_NAME,Monet.MONET_TOKEN_ADDRESS,18,"Le Monet"));
 
 		File cdef = getContactsFile(); 
 		if(cdef.exists()){
 			loadContactDefinitions(new InputStreamReader(new FileInputStream(cdef),StandardCharsets.UTF_8));
 		}
-		//special CountDeMonet contact is always present
+		//special CountDeMonet contact MUST be listed by terms of LICENSE:
 		addContact(Monet.COUNT_DE_MONET_NAME,Monet.COUNT_DE_MONET_ADDRESS);
 
 		
@@ -217,9 +220,17 @@ public class MonetOptions {
 		}
 			
 	}
-	protected void loadHardCodedTokens() {
-		log.info("loading hard coded tokens");
-		log.info("done");
+	/**
+	 * these tokens are loaded by default into tokens.tsv
+	 * when creating the conf dir
+	 */
+	protected void loadDefaultTokens() {
+		addToken(new ERC20("REP","0xe94327d07fc17907b4db788e5adf2ed424addff6",18,"Auger"));
+		addToken(new ERC20("OMG","0xd26114cd6EE289AccF82350c8d8487fedB8A0C07",18,"OmiseGO"));
+		addToken(new ERC20("GNO","0x6810e776880c02933d47db1b9fc05908e5386b96",18,"Gnosis"));
+		addToken(new ERC20("EOS","0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0",18,"EOS"));
+		addToken(new ERC20("QTUM","0x9a642d6b3368ddc662CA244bAdf32cDA716005BC",18,"Qtum"));
+		addToken(new ERC20("GNT","0xa74476443119A942dE498590Fe1f2454d7D4aC0d",18,"Golem"));
 	}
 
 }

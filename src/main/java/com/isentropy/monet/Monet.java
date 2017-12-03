@@ -72,12 +72,14 @@ public class Monet {
 
 	public final static String MONET_TOKEN_NAME ="MONET";
 	public final static String MONET_TOKEN_ADDRESS ="0x5648549517cbedcb366898aedd55f4e032dc9c33";
-	public final static String DOC_URL ="https://github.com/isentropy/monet/wiki";
+	public final static String DOC_URL ="https://github.com/isentropy/monet";
 
-	public final static String INFO="\nMonet v0.1\n"
-			+"\nA simple command line wallet for trading, tracking and creating Etherum tokens.\n"
-			+"\nLicensed under XXX. USE AT YOUR OWN RISK!\n"
-			+"\nSend donations to:\n"+COUNT_DE_MONET_ADDRESS
+	public final static String WARNING = "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE";
+	public final static String INFO="\nMonet v0.1 by Isentropy (https://isentropy.com)\n"
+			+"\nA simple, open-source command line wallet for trading, tracking and creating Etherum tokens.\n"
+			+"\nLicensed under Modified MIT License (see LICENSE file)\n\n"
+			+ WARNING
+			+"\n\nCount de Monet likes tokens:\n"+COUNT_DE_MONET_ADDRESS
 			+"\nor send over Monet:\nsend "+COUNT_DE_MONET_NAME + " <amount> <token name>";
 
 	protected final static DefaultBlockParameter latest = DefaultBlockParameter.valueOf("latest");
@@ -130,14 +132,6 @@ public class Monet {
 
 	protected void refreshPriceChecker() throws IOException{
 		pc = PriceChecker.fromCoinMarketCapJson();
-	}
-	public static void argsHelp(){
-		System.out.println("Monet v0.1\nA command line wallet for creating and managing Ethereum tokens");
-		System.out.println("Copyright 2017 Isentropy LLC");
-		System.out.println("\n--datadir <dir>: dir to store config and wallets [default = ~/.monet]");
-		System.out.println("--rpc <RPC URL or ipc file path>: IPC or RPC of geth");
-		System.out.println("--help: display this help");
-
 	}
 
 	public static MonetOptions parseArgs(String[] args) throws FileNotFoundException, IOException{
@@ -257,8 +251,17 @@ public class Monet {
 		}
 		ps.flush();
 	}
+	protected void printWalletNames(Console cons) throws Exception{
+		String fmt = "%-20s\t%42s\n";
+		cons.printf(fmt,"WALLET_NAME","ADDRESS");
+		for(Map.Entry<String,WalletFile> e : opts.wallets.entrySet()){
+			String addr = e.getKey();
+			String name = opts.getNameFromAddress(addr);
+			cons.printf(fmt,name==null?"":name,addr);
+		}
+	}
 	protected void printWalletBalances(Console cons) throws Exception{
-		String fmt = "%-20s\t%14s\t%14s\t%s\n";
+		String fmt = "%-30s\t%14s\t%14s\t%s\n";
 		cons.printf(fmt,"WALLET","TOKEN","HOLDINGS","VALUE");
 		Map<String,Collection<Position>> positions = getPositions();
 		for(Map.Entry<String,Collection<Position>> e : positions.entrySet()){
@@ -416,6 +419,17 @@ public class Monet {
 
 		return 0;
 	}
+	
+	public static void argsHelp(){
+		System.out.println("Monet v0.1\nA command line wallet for creating and managing Ethereum tokens");
+		System.out.println("Copyright 2017 Isentropy LLC (https://isentropy.com)");
+		System.out.println("\n--datadir <dir>: dir to store config and wallets [default = ~/.monet]");
+		System.out.println("--rpc <RPC URL or ipc file path>: IPC or RPC of geth");
+		System.out.println("--help: display this help");
+
+	}
+
+	
 	protected void help(PrintWriter ps) throws IOException{
 		ps.println("\nHelp");
 		ps.println("-------");
@@ -434,6 +448,14 @@ public class Monet {
 		ps.println("\nFull documentation at "+DOC_URL+"\n");
 	}
 
+	protected void info(PrintWriter out){
+		out.println(INFO);
+		out.println("\n---------------------------\n");
+		out.println("\ndatadir = " + opts.datadir);
+		out.println("connected to geth RPC at " + opts.rpc);
+		out.println("price check URL: " +PriceChecker.COINMARKETCAP_API_V1_URL);
+		out.println("\nFull documentation at "+DOC_URL+"\n");
+	}
 
 	protected void cli(Console cons) throws IOException{
 		PrintWriter out = cons.writer();
@@ -522,12 +544,7 @@ public class Monet {
 
 				}
 				else if("info".startsWith(cmd)){
-					out.println(INFO);
-					out.println("\ndatadir = " + opts.datadir);
-					out.println("connected to geth RPC at " + opts.rpc);
-					out.println("price check URL: " +PriceChecker.COINMARKETCAP_API_V1_URL);
-					out.println("\nFull documentation at "+DOC_URL+"\n");
-
+					info(out);
 				}
 				else if("refresh".startsWith(cmd)){
 					boolean prices=false,conf=false;
@@ -554,6 +571,8 @@ public class Monet {
 				}
 				else if("wallet".startsWith(cmd)){
 					if(sub == null){
+						printWalletNames(cons);
+						cons.printf("\n\n");
 						printWalletBalances(cons);
 					}
 					else if("make".startsWith(sub)){
