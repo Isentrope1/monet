@@ -19,11 +19,19 @@ public class Util {
 	public Util() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	/**
+	 * generate java sources from solidity
+	 * @param args
+	 */
 
 	public static void main(String[] args) {
-		File sd = new File("/home/fj/monae/src/main/solidity");
-		String javadir= "/home/fj/monae/src/main/java";
-		String pkg = "org.isentropy.monet.contracts";
+		//first run:  solc --abi --bin *.sol -o .
+		//in solidity dir
+		
+		File sd = new File("/path/to/solidity");
+		String javadir= "/path/to/javasrc";
+		String pkg = "com.isentropy.monet.contracts";
 		try{
 			generateJavaSources(sd,javadir,pkg);
 		}
