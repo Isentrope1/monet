@@ -6,12 +6,12 @@ public class ERC20 {
 	private int decimals;
 	public ERC20(String id_, String address_,int decimals_) {
 		symbol = id_;
-		address = address_;
+		address = address_.toLowerCase();
 		decimals = decimals_;
 	}
 	public ERC20(String id_, String address_,int decimals_,String desc_) {
 		symbol = id_;
-		address = address_;
+		address = address_.toLowerCase();
 		decimals = decimals_;
 		desc = desc_;
 	}

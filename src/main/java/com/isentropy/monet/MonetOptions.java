@@ -99,6 +99,7 @@ public class MonetOptions {
 		return n;
 	}
 	protected void addContact(String name,String addr){
+		addr = addr.toLowerCase();
 		contacts.put(name.toLowerCase(),new Contact(name,addr));
 		contact_addr2name.put(addr,name);
 	}
