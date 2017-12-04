@@ -56,6 +56,7 @@ import org.web3j.tx.RawTransactionManager;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.Transfer;
 import org.web3j.tx.exceptions.ContractCallException;
+import org.web3j.utils.Convert;
 import org.web3j.utils.Convert.Unit;
 
 import com.isentropy.monet.contracts.HumanStandardToken;
@@ -379,9 +380,15 @@ public class Monet {
 		TransactionReceipt receipt;
 		cons.printf("Sending...");
 		if(currency.equals(ETH)){
-			receipt = Transfer.sendFunds(
-					web3, creds, recip,
-					BigDecimal.valueOf(amount), Unit.ETHER).send();
+			
+			/*
+			 * sendFunds(
+            String toAddress, BigDecimal value, Convert.Unit unit, BigInteger gasPrice,
+            BigInteger gasLimit)
+			 */
+			TransactionManager tm = new RawTransactionManager(web3,creds);
+			Transfer trans = new Transfer(web3, tm);
+			receipt = trans.sendFunds(recip, BigDecimal.valueOf(amount), Unit.ETHER, getGasPrice(),opts.gas_limit_sendtoken).send();
 		}
 		else{
 			TransactionManager tm = new RawTransactionManager(web3,creds);
@@ -419,7 +426,7 @@ public class Monet {
 
 		return 0;
 	}
-	
+
 	public static void argsHelp(){
 		System.out.println("Monet v0.1\nA command line wallet for creating and managing Ethereum tokens");
 		System.out.println("Copyright 2017 Isentropy LLC (https://isentropy.com)");
@@ -429,7 +436,7 @@ public class Monet {
 
 	}
 
-	
+
 	protected void help(PrintWriter ps) throws IOException{
 		ps.println("\nHelp");
 		ps.println("-------");
@@ -598,7 +605,10 @@ public class Monet {
 
 					}
 				}
-
+				else if("quit".startsWith(cmd) ||
+						"exit".equals(cmd)){
+					return;
+				}
 				else{
 					switch(cmd){
 					case "help":
