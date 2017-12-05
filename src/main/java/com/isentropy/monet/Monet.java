@@ -371,8 +371,6 @@ public class Monet {
 			cons.printf("Aborted send.\n");
 			return 1;
 		}
-
-
 		if(recip.equals(creds.getAddress())){
 			cons.printf("\nAborted send. Sender and recipient must be different.\n");
 			return 2;			
@@ -380,12 +378,6 @@ public class Monet {
 		TransactionReceipt receipt;
 		cons.printf("Sending...");
 		if(currency.equals(ETH)){
-			
-			/*
-			 * sendFunds(
-            String toAddress, BigDecimal value, Convert.Unit unit, BigInteger gasPrice,
-            BigInteger gasLimit)
-			 */
 			TransactionManager tm = new RawTransactionManager(web3,creds);
 			Transfer trans = new Transfer(web3, tm);
 			receipt = trans.sendFunds(recip, BigDecimal.valueOf(amount), Unit.ETHER, getGasPrice(),opts.gas_limit_sendtoken).send();
@@ -399,7 +391,6 @@ public class Monet {
 		}
 		cons.printf("done\n");
 		displayTransaction(receipt,cons);
-		//t.de
 		return 0;
 	}
 	protected byte createAccount(String acctname,Console cons) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException, CipherException, IOException{

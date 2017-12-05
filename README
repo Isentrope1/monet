@@ -68,7 +68,7 @@ Commands may be abbreviated. For example: b = balance, w m = wallet make.
 
 Token Ecosystem
 The official ERC20 token of Monet is the Monet, located at 0x5648549517cbedcb366898aedd55f4e032dc9c33.
-Its address is hard-coded into Monet, along with other popular ERC20 tokens. There is a fixed quantity of 1000000 Monets in cirulation. If you would like some Monet, send me some tokens and/or email:
- 
+Its address is hard-coded into Monet, along with other popular ERC20 tokens. There is a fixed quantity of 1000000 Monets in circulation. If you would like some Monet, send me some tokens and/or email:
+
 Count de Monet (0x978097f6628b66b22df8b8d39284743c58e1542f)
 countdemonet@isentropy.com
