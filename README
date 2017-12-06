@@ -27,6 +27,9 @@ You choose sending wallet in following steps. Popular ERC20 token definitions (e
 * check wallet positions values in USD using token price information from coinmarketcap.com
 >> wallet
 
+* create wallets
+>> wallet make MyNewWallet
+
 * easily MAKE YOUR OWN ERC20 token: 
 >> token make <symbol> <quantity>
 Tokens created this way use HumanStandardToken.sol as solidity contract. When creation is completed, created token will be added to your token list. You can then transfer it to others.

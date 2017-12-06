@@ -352,14 +352,21 @@ public class Monet {
 		//HumanStandardToken.deploy(web3, creds, tm, HumanStandardToken.GAS_LIMIT.multiply(BigInteger.valueOf(9999999)), amount, currency, BigInteger.valueOf(decimals), currency);
 		cons.printf("Sending...");
 		HumanStandardToken newtok = deploy.send();
-		cons.printf("done\n");
+		if(newtok == null || newtok.getContractAddress() == null){
+			cons.printf("Error creating token.\n");
+			return null;
+		}
 		String addr = newtok.getContractAddress();
+		cons.printf("done\n");
 		opts.token_definitions.put(currency, new ERC20(currency,addr,decimals));
 		opts.save();
 		return addr;
 	}
-	protected void displayTransaction(TransactionReceipt r,Console cons){
-		cons.printf("Tranaction %s\t%s\t%s\n",r.getBlockNumber(), r.getGasUsedRaw(),r.getStatus());
+	protected void displayTransaction(TransactionReceipt r,Console cons) throws IOException{
+		BigInteger gas = r.getGasUsed();
+		BigDecimal gas_used_in_eth=new BigDecimal(getGasPrice().multiply(gas)).divide(eth_to_wei);
+		
+		cons.printf("Transaction:\tgas_used_eth=%s\tindex=%s\tblock_num=%s\tgas_used=%s\tstatus=%s\thash=%s\n",gas_used_in_eth.toPlainString(),r.getTransactionIndexRaw(), r.getBlockNumber(), r.getGasUsed().toString(),r.getStatus(),r.getTransactionHash());
 	}
 	protected byte send(String recip,double amount,String currency,Console cons) throws Exception{
 		BigInteger gp = getGasPrice();
