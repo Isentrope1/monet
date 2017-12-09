@@ -17,7 +17,7 @@ import javax.json.JsonValue;
 
 public class PriceChecker {
 
-	public static final String COINMARKETCAP_API_V1_URL = "https://api.coinmarketcap.com/v1/ticker/";
+	public static final String COINMARKETCAP_API_V1_URL = "https://api.coinmarketcap.com/v1/ticker/?limit=0";
 	private HashMap<String,Double> prices = new HashMap<String,Double>();
 	private PriceChecker() {}
 	public static PriceChecker fromCoinMarketCapJson() throws IOException{

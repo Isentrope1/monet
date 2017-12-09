@@ -165,30 +165,38 @@ public class Monet {
 			tokens = opts.token_definitions;
 
 		for(String acct : accts){
+			BigInteger bal_i;
 			EthGetBalance bal = web3.ethGetBalance(acct, latest).send();
-			BigInteger eth_i = bal.getBalance();
-			if(eth_i.compareTo(BigInteger.ZERO) > 0){
-				BigDecimal eth_d = new BigDecimal(eth_i).divide(eth_to_wei);
-				Collection<Position> p = positions.get(acct);
-				if(p == null){
-					p = new ArrayList<Position>();
-					positions.put(acct, p);
-				}
-				p.add(new Position(ETH,eth_d.doubleValue()));
+			bal_i = bal.getBalance();
+
+			if(bal_i.compareTo(BigInteger.ZERO) <= 0)
+				continue;
+			BigDecimal bal_d = new BigDecimal(bal_i).divide(eth_to_wei);
+			Collection<Position> p = positions.get(acct);
+			if(p == null){
+				p = new ArrayList<Position>();
+				positions.put(acct, p);
 			}
-			TransactionManager tm = new ClientTransactionManager(web3,acct);
-			for(ERC20 tok : tokens.values()){
-				Token t;
-				BigInteger bal_i;
-				try{
-					t = Token.load(tok.getAddress(), web3, tm, Token.GAS_PRICE, Token.GAS_LIMIT);
-					bal_i = t.balanceOf(acct).send();
-				}
-				catch(ContractCallException e){
-					log.warn("Bad Token address: "+tok.getAddress());
-					log.warn(e.getMessage());
-					continue;
-				}
+			p.add(new Position(ETH,bal_d.doubleValue()));
+		}
+
+		for(ERC20 tok : tokens.values()){
+			Token t;
+			TransactionManager tm = new ClientTransactionManager(web3,null);
+			try{
+				t = Token.load(tok.getAddress(), web3, tm, Token.GAS_PRICE, Token.GAS_LIMIT);
+			}
+			catch(ContractCallException e){
+				log.warn("Bad Token address: "+tok.getAddress());
+				log.warn(e.getMessage());
+				continue;
+			}
+			if(t == null){
+				log.warn("Bad Token address: "+tok.getAddress());
+				continue;
+			}
+			for(String acct : accts){
+				BigInteger bal_i = t.balanceOf(acct).send();
 				if(bal_i.compareTo(BigInteger.ZERO) <= 0)
 					continue;
 				BigDecimal bal_d = new BigDecimal(bal_i).divide(BigDecimal.TEN.pow(tok.getDecimals()));
@@ -262,9 +270,12 @@ public class Monet {
 		}
 	}
 	protected void printWalletBalances(Console cons) throws Exception{
+		printWalletBalances(null,null,cons);
+	}
+	protected void printWalletBalances(Collection<String> accts, Map<String,ERC20> tokens,Console cons) throws Exception{
 		String fmt = "%-30s\t%14s\t%14s\t%s\n";
 		cons.printf(fmt,"WALLET","TOKEN","HOLDINGS","VALUE");
-		Map<String,Collection<Position>> positions = getPositions();
+		Map<String,Collection<Position>> positions = getPositions(accts,tokens);
 		for(Map.Entry<String,Collection<Position>> e : positions.entrySet()){
 			String address = e.getKey();
 			Collection<Position> pos = e.getValue();
@@ -365,7 +376,7 @@ public class Monet {
 	protected void displayTransaction(TransactionReceipt r,Console cons) throws IOException{
 		BigInteger gas = r.getGasUsed();
 		BigDecimal gas_used_in_eth=new BigDecimal(getGasPrice().multiply(gas)).divide(eth_to_wei);
-		
+
 		cons.printf("Transaction:\tgas_used_eth=%s\tindex=%s\tblock_num=%s\tgas_used=%s\tstatus=%s\thash=%s\n",gas_used_in_eth.toPlainString(),r.getTransactionIndexRaw(), r.getBlockNumber(), r.getGasUsed().toString(),r.getStatus(),r.getTransactionHash());
 	}
 	protected byte send(String recip,double amount,String currency,Console cons) throws Exception{
@@ -438,7 +449,7 @@ public class Monet {
 	protected void help(PrintWriter ps) throws IOException{
 		ps.println("\nHelp");
 		ps.println("-------");
-		ps.println("\nbalance [wallet]: print total or per wallet balance info");
+		ps.println("\nbalance [wallet [<symbols>,]]: print total or per wallet balance info");
 		ps.println("\ncontact: list contacts");
 		ps.println("contact add <name> <address>: add new contact address");
 		ps.println("\nrefresh [config|prices]: refresh config or rates from coinmarketcap.com");
@@ -484,7 +495,18 @@ public class Monet {
 						printTotals(balances,out);
 					}
 					else if("wallet".startsWith(sub)){
-						printWalletBalances(cons);
+						Map<String,ERC20> tokens = null;
+						if(fields.length > 2){
+							String[] symbs = fields[2].toUpperCase().split(",");
+							tokens = new HashMap<String,ERC20>();
+							for(String s:symbs){
+								ERC20 e = opts.token_definitions.get(s);
+								if(e != null){
+									tokens.put(s,e);
+								}
+							}
+						}
+						printWalletBalances(null,tokens,cons);
 					}
 
 				}
