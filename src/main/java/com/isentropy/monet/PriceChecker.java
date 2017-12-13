@@ -38,15 +38,23 @@ public class PriceChecker {
 		for(JsonValue v : currencies){
 			JsonObject c = (JsonObject) v;
 			String symb = c.getString("symbol");
-			Double price_usd = Double.parseDouble(c.getString("price_usd"));
-			pc.prices.put(symb, price_usd);
+			JsonValue priceusd = c.get("price_usd");
+			if(priceusd != null && !JsonValue.NULL.equals(priceusd) && priceusd instanceof JsonString){
+				Double price_usd = Double.parseDouble(((JsonString) priceusd).getString());
+				pc.prices.put(symb, price_usd);
+			}
 		}
 		return pc;
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		try {
+			PriceChecker pc = fromCoinMarketCapJson();
+			System.out.println(pc.getPrice("BTC"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }
