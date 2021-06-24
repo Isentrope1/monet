@@ -201,16 +201,11 @@ public class MonetOptions {
 			writeFileTokenDefinitions(new OutputStreamWriter(new FileOutputStream(getTokenDefFile()),StandardCharsets.UTF_8));
 			log.info("loading hard coded tokens");
 		}
-		//special Monet token MUST be listed by terms of LICENSE:
-		addToken(new ERC20(Monet.MONET_TOKEN_NAME,Monet.MONET_TOKEN_ADDRESS,18,"Le Monet"));
 
 		File cdef = getContactsFile(); 
 		if(cdef.exists()){
 			loadContactDefinitions(new InputStreamReader(new FileInputStream(cdef),StandardCharsets.UTF_8));
 		}
-		//special CountDeMonet contact MUST be listed by terms of LICENSE:
-		addContact(Monet.COUNT_DE_MONET_NAME,Monet.COUNT_DE_MONET_ADDRESS);
-
 		
 		File keydir = getKeyDir();
 		if(keydir.exists()){
