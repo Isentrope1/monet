@@ -19,7 +19,7 @@ Monet is an open source java command line Ethereum wallet tool that manages ETH 
 
 * send and receive ETH and ERC20 tokens: 
 >> token add OMG 0xd26114cd6EE289AccF82350c8d8487fedB8A0C07 18
->> contact add MrMonet 0x978097f6628b66b22df8b8d39284743c58e1542f
+>> contact add MrMonet 0x1231231231231231231231231231231231231231
 >> send MrMonet 1.23 OMG
 >> send MrMonet 2 ETH
 You choose sending wallet in following steps. Popular ERC20 token definitions (eg OMG) are included.
@@ -68,10 +68,4 @@ wallet make <name>: make a new wallet
 
 Commands may be abbreviated. For example: b = balance, w m = wallet make. 
 
-
-Token Ecosystem
-The official ERC20 token of Monet is the Monet, located at 0x5648549517cbedcb366898aedd55f4e032dc9c33.
-Its address is hard-coded into Monet, along with other popular ERC20 tokens. There is a fixed quantity of 1000000 Monets in circulation. If you would like some Monet, send me some tokens and/or email:
-
-Count de Monet (0x978097f6628b66b22df8b8d39284743c58e1542f)
 countdemonet@isentropy.com
