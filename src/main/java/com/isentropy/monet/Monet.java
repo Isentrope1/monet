@@ -67,22 +67,14 @@ public class Monet {
 	private static Logger log = LoggerFactory.getLogger(com.isentropy.monet.Monet.class);
 
 	public final static String ETH ="ETH";
-
-	public final static String COUNT_DE_MONET_NAME ="CountDeMonet";
-	public final static String COUNT_DE_MONET_ADDRESS ="0x978097f6628b66b22df8b8d39284743c58e1542f";
-
-	public final static String MONET_TOKEN_NAME ="MONET";
-	public final static String MONET_TOKEN_ADDRESS ="0x5648549517cbedcb366898aedd55f4e032dc9c33";
 	public final static String DOC_URL ="https://github.com/isentropy/monet";
 
 	public final static String WARNING = "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE";
 	public final static String INFO="\nMonet v0.1 by Isentropy (https://isentropy.com)\n"
 			+"\nA simple, open-source command line wallet for trading, tracking and creating Etherum tokens.\n"
 			+"\nLicensed under Modified MIT License (see LICENSE file)\n\n"
-			+ WARNING
-			+"\n\nCount de Monet likes tokens:\n"+COUNT_DE_MONET_ADDRESS
-			+"\nor send over Monet:\nsend "+COUNT_DE_MONET_NAME + " <amount> <token name>";
-
+			+ WARNING;
+	
 	protected final static DefaultBlockParameter latest = DefaultBlockParameter.valueOf("latest");
 	protected final static BigDecimal eth_to_wei = BigDecimal.TEN.pow(18);
 	protected MonetOptions opts;
